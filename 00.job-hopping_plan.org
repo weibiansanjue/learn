@@ -1,0 +1,697 @@
+* 01.Java core
+** Java运行原理
+   src.java -> javac编译 -> 字节码程序.class -> java命令运行于java虚拟机
+** 标识符
+   字母、数字、下划线、$
+   不以数字开头
+** 数据类型 
+*** 基本数据类型
+    
+    |-----------+----------+----------------+------+----------+----------------------------------|
+    |           |          |                | bits | init     | range                            |
+    |-----------+----------+----------------+------+----------+----------------------------------|
+    | primitive | numeric  | byte           |    8 | 0        | [-128, 127]                      |
+    |           |          | short          |   16 | 0        | [-2^15, 2^15]                    |
+    |           |          | int            |   32 | 0        | [-2^31, 2^31-1]                  |
+    |           |          | long           |   64 | 0        | [-2^63, 2^63-1]                  |
+    |           |          | char           |   16 | '\u0000' | [0, 2^16-1] ['\u0000', '\uffff'] |
+    |-----------+----------+----------------+------+----------+----------------------------------|
+    |           | floating | float          |   32 | 0.0      | [, ]                             |
+    |           | point    | double         |   64 | 0.0      | [, ]                             |
+    |-----------+----------+----------------+------+----------+----------------------------------|
+    |           |          | boolean        |    1 | false    | [true;false]                     |
+    |-----------+----------+----------------+------+----------+----------------------------------|
+    | reference |          | class type     |      | null     |                                  |
+    |           |          | interface type |      | null     |                                  |
+    |           |          | array type     |      | null     |                                  |
+    |           |          | null type      |      | null     |                                  |
+    |-----------+----------+----------------+------+----------+----------------------------------|
+    
+*** 类型转码
+**** 自动转换
+     将某个基本类型的值直接赋给另一种基本类型的变量
+     byte -> short(char) -> int -> long -> float -> double
+**** 强制类型转换
+
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | to\from | byte | short  | char    | int     | long    | float   | double  |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | byte    | X    | (byte) | (byte)  | (byte)  | (byte)  | (byte)  | (byte)  |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | short   | ***  | X      | (short) | (shrot) | (shrot) | (shrot) | (shrot) |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | char    | ***  | (char) | X       | (shrot) | (shrot) | (shrot) | (shrot) |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | int     | ***  | ***    | ***     | X       | (int)   | (int)   | (int)   |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | long    | ***  | ***    | ***     | ***     | X       | (long)  | (long)  |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | float   | ***  | ***    | ***     | ***     | ***     | X       | (float) |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+    | double  | ***  | ***    | ***     | ***     | ***     | ***     | X       |
+    |---------+------+--------+---------+---------+---------+---------+---------|
+
+** 运算符优先级
+   (). > 单目 > 强制 > 算术 > 移位 > 关系 > 逻辑 > 三目 > 赋值
+** 一些关键字
+*** switch
+    参数类型：byte, short, char, int
+*** break
+    完全结束一个循环，跳出整个循环、循环体
+*** continue
+    中止本次循环，执行下一次循环体
+*** return
+    结束一个方法
+*** static
+    1.被static修饰的成员属于类，叫做“类成员”，通过“类名.成员”调用；
+    2.不被static修饰的成员属于对象，叫做“实例成员”，通过“对象.成员”调用；
+    3.static成员可以被所有对象共享。
+*** final
+    1.被final修饰的变量叫做“常量”，一旦初始化赋值就不能改变了；
+    2.用final修饰的类不能被继承。
+*** this
+    1.当前对象的引用。
+    2.构造方法中初始化，调用本类的其他构造方法。
+*** super
+    父类的引用。
+** 数组
+*** 概念
+     数组元素具有相同的数据类型。
+*** 定义
+     type[] arrayName;
+*** 初始化
+     1.静态初始化：type[] arrayName = new type[] {element1, element2, ...}
+      eg : int[] arrayInt = new int[] {1, 2, 3,};
+     2.动态初始化：type[] arrayName = new type[length];
+      eg : int[] a = new int[5];
+** 字符串
+*** String
+*** StringBuffer
+*** StringBuilder
+** 类与对象
+*** 类与对象的概念
+**** 概念
+     类：
+     对象：
+**** 组成
+     成员变量：类中定义的变量，表述的是类的属性或状态。
+     成员方法：描述类的行为或动作。
+**** 构造方法
+     与类同名，无返回值。
+     用来创建对象或初始化数据。
+     不手动书写构造方法，系统默认提供一个无参构造方法。
+     手动添加有参构造方法，默认无参构造方法将消失，故需要手动添加无参构造方法。
+*** 可见性
+    | 'private'  | 当前类可见                         |
+    | default    | 当前类可见，本包可见               |
+    | 'proteced' | 当前类可见，本包可见，外包子类可见 |
+    | 'public'   | 所有                                 |
+*** 类、抽象类、接口
+     类（全部实现）  抽象类（部分实现）  接口（全不实现） 
+     封装           继承              多态  
+**** 类 
+     变量与方法的封装
+**** 抽象类
+     被abstract修饰的类叫抽象类。
+     成员变量：与类中的成员变量无区别。
+     成员方法：与类中实现的方法无区别。
+     抽象方法：被abstract修饰的方法，无方法体，只有声明。
+              包含抽象方法的类一定是抽象类，抽象类中不一定包含抽象方法。
+     构造方法：与类构造方法写法一样，但不能创建对象。可以初始化数据。
+**** 接口
+***** 概念
+      被interface修饰的叫接口。描述的是一系列的规范标准。
+***** 成员变量
+      天生被 public static final 修饰
+***** 成员方法
+      全是抽象方法，天生被 public abstract 修饰
+***** 构造方法
+      没有构造方法，不能创建对象，需要被实现
+***** 关系
+      Interface extends Interface1, Interface2
+      Class implements Interface
+*** 封装、继承、多态
+**** 封装
+     类将相关的变量和方法封装在类的内部，将注意力放在类或对象上。
+**** 继承
+     父类有的子类都有，关键字 extends
+     继承关系：
+       类    extends 类
+       类    extends 抽象类
+       抽象类 extneds 类
+       抽象类 extends 抽象类
+**** 多态
+***** 概念
+      一种事物或行为的不同表现形式。
+***** 重载、覆写
+     1.类内部多态（重载）：方法名一样，参数列表不同，叫做“重载”。
+     2.继承中多态（覆写）：子类覆写父类中的方法。将执行子类的方法。
+     应用：父类的引用指向子类的对象
+       public class SuperClass {}
+       public class ChildClass extends SuperClass {}
+       
+       SuperClass superClass = new ChildClass();
+     3.方法的多态：重载（编译时多态）；重写（运行时多态）
+***** 方法覆盖
+      1.方法签名（方法名+参数列表）必须相同。
+      2.可见性>=父类的可见性。
+      3.返回值<=父类的返回值
+*** 内部类
+**** 定义
+     将一个类定义在另一个类的内部
+**** 作用
+     1.体现更好的封装性。
+     2.声明一个成员内部类，希望这个内部类只为其外部类服务。
+     3.通常成员内部类会作为其外部类的一个属性。
+**** 1.成员内部类
+     直接定义在外部类的内部。
+     需要利用外部类的对象来调用内部类的构造方法。
+     构造内部类对象之前，需要import内部类，这时外部类相当于它的一个包名。
+     可以利用可见性来控制内部类的访问范围。
+**** 2.静态成员内部类
+     用 static 修饰的成员内部类。
+     可以直接创建对象。
+     创建对象之前需要import内部类，外部类相当于它的一个包名。
+**** 3.局部内部类
+     定义在方法的内部，很少用。
+     使用范围就在方法中，方法外无法使用。
+**** 4.匿名内部类
+     创建一个没有名字的类
+     创建某个类的匿名子类或匿名实现类
+     如果父类或接口中有抽象方法，那么这个匿名类中必须要覆写这些抽象方法。
+     实际上是创建了类或接口的子类对象，同时覆写或声明其他的属性或方法。
+     对于final修饰的类，无法创建其匿名子类.
+**** 内部类生命周期
+     1, 2 没有生命周期。
+     3, 4 有生命周期。
+** 集合 
+*** List 
+*** Set 
+*** Map 
+*** SortedSet 
+*** SortedMap 
+*** Collection
+** 多线程
+*** 继承Thread类
+    class ThreadDemo extends Thread {
+        @Override
+        public void run() {
+            // do something
+        }
+        
+        public static void main(String[] args) {
+            ThreadDemo thread = new ThreadDemo();
+            thread.start();
+        }
+    }
+*** 实现Runnable接口
+    class ThreadDemo implements Runnable {
+        @Override
+        public void run() {
+            // do something
+        }
+        
+        public static void main(String[] args) {
+            ThreadDemo run = new ThreadDemo();
+            Thread thread = new Thread(run);
+            thread.start();
+        }
+    }
+** Java API
+* 02.Read jdk1.6.0_45 src
+** java.io
+[ ] Bits.class
+[ ] BufferedInputStream.class
+[ ] BufferedOutputStream.class
+[ ] BufferedReader.class
+[ ] BufferedWriter.class
+[ ] ByteArrayInputStream.class
+[ ] ByteArrayOutputStream.class
+[ ] CharArrayReader.class
+[ ] CharArrayWriter.class
+[ ] CharConversionException.class
+[ ] Closeable.class
+[ ] Console.class
+[ ] DataInput.class
+[ ] DataInputStream.class
+[ ] DataOutput.class
+[ ] DataOutputStream.class
+[ ] DeleteOnExitHook.class
+[ ] EOFException.class
+[ ] ExpiringCache.class
+[ ] Externalizable.class
+[*] File.class
+[ ] FileDescriptor.class
+[ ] FileFilter.class
+[ ] FileInputStream.class
+[ ] FilenameFilter.class
+[ ] FileNotFoundException.class
+[ ] FileOutputStream.class
+[ ] FilePermission.class
+[ ] FilePermissionCollection.class
+[ ] FileReader.class
+[*] FileSystem.class
+[ ] FileWriter.class
+[ ] FilterInputStream.class
+[ ] FilterOutputStream.class
+[ ] FilterReader.class
+[ ] FilterWriter.class
+[ ] Flushable.class
+[ ] InputStream.class
+[ ] InputStreamReader.class
+[ ] InterruptedIOException.class
+[ ] InvalidClassException.class
+[ ] InvalidObjectException.class
+[ ] IOError.class
+[ ] IOException.class
+[ ] LineNumberInputStream.class
+[ ] LineNumberReader.class
+[ ] NotActiveException.class
+[ ] NotSerializableException.class
+[ ] ObjectInput.class
+[ ] ObjectInputStream.class
+[ ] ObjectInputValidation.class
+[ ] ObjectOutput.class
+[ ] ObjectOutputStream.class
+[ ] ObjectStreamClass.class
+[ ] ObjectStreamConstants.class
+[ ] ObjectStreamException.class
+[ ] ObjectStreamField.class
+[ ] OptionalDataException.class
+[ ] OutputStream.class
+[ ] OutputStreamWriter.class
+[ ] PipedInputStream.class
+[ ] PipedOutputStream.class
+[ ] PipedReader.class
+[ ] PipedWriter.class
+[ ] PrintStream.class
+[ ] PrintWriter.class
+[ ] PushbackInputStream.class
+[ ] PushbackReader.class
+[ ] RandomAccessFile.class
+[ ] Reader.class
+[ ] SequenceInputStream.class
+[ ] SerialCallbackContext.class
+[ ] Serializable.class
+[ ] SerializablePermission.class
+[ ] StreamCorruptedException.class
+[ ] StreamTokenizer.class
+[ ] StringBufferInputStream.class
+[ ] StringReader.class
+[ ] StringWriter.class
+[ ] SyncFailedException.class
+[ ] UnsupportedEncodingException.class
+[ ] UTFDataFormatException.class
+[ ] Win32FileSystem.class
+[ ] WinNTFileSystem.class
+[ ] WriteAbortedException.class
+[ ] Writer.class
+
+** java.lang
+*** java.lang.annotation
+[ ] java.lang.annotation.Annotation.class
+[ ] java.lang.annotation.AnnotationFormatError.class
+[ ] java.lang.annotation.AnnotationTypeMismatchException.class
+[ ] java.lang.annotation.Documented.class
+[ ] java.lang.annotation.ElementType.class
+[ ] java.lang.annotation.IncompleteAnnotationException.class
+[ ] java.lang.annotation.Inherited.class
+[ ] java.lang.annotation.Retention.class
+[ ] java.lang.annotation.RetentionPolicy.class
+[ ] java.lang.annotation.Target.class
+*** java.lang.instrument
+[ ] java.lang.instrument.ClassDefinition.class
+[ ] java.lang.instrument.ClassFileTransformer.class
+[ ] java.lang.instrument.IllegalClassFormatException.class
+[ ] java.lang.instrument.Instrumentation.class
+[ ] java.lang.instrument.UnmodifiableClassException.class
+*** java.lang.management
+[ ] java.lang.management.ClassLoadingMXBean.class
+[ ] java.lang.management.CompilationMXBean.class
+[ ] java.lang.management.GarbageCollectorMXBean.class
+[ ] java.lang.management.LockInfo.class
+[ ] java.lang.management.ManagementFactory.class
+[ ] java.lang.management.ManagementPermission.class
+[ ] java.lang.management.MemoryManagerMXBean.class
+[ ] java.lang.management.MemoryMXBean.class
+[ ] java.lang.management.MemoryNotificationInfo.class
+[ ] java.lang.management.MemoryPoolMXBean.class
+[ ] java.lang.management.MemoryType.class
+[ ] java.lang.management.MemoryUsage.class
+[ ] java.lang.management.MonitorInfo.class
+[ ] java.lang.management.OperatingSystemMXBean.class
+[ ] java.lang.management.RuntimeMXBean.class
+[ ] java.lang.management.ThreadInfo.class
+[ ] java.lang.management.ThreadMXBean.class
+*** java.lang.ref
+[ ] java.lang.ref.Finalizer.class
+[ ] java.lang.ref.FinalReference.class
+[ ] java.lang.ref.PhantomReference.class
+[ ] java.lang.ref.Reference.class
+[ ] java.lang.ref.ReferenceQueue.class
+[ ] java.lang.ref.SoftReference.class
+[ ] java.lang.ref.WeakReference.class
+*** (-)java.lang.reflect
+[ ] java.lang.reflect.AccessibleObject.class
+[ ] java.lang.reflect.AnnotatedElement.class
+[ ] java.lang.reflect.Array.class
+[ ] java.lang.reflect.Constructor.class
+[ ] java.lang.reflect.Field.class
+[ ] java.lang.reflect.GenericArrayType.class
+[ ] java.lang.reflect.GenericDeclaration.class
+[ ] java.lang.reflect.GenericSignatureFormatError.class
+[ ] java.lang.reflect.InvocationHandler.class
+[ ] java.lang.reflect.InvocationTargetException.class
+[ ] java.lang.reflect.MalformedParameterizedTypeException.class
+[ ] java.lang.reflect.Member.class
+[ ] java.lang.reflect.Method.class
+[ ] java.lang.reflect.Modifier.class
+[ ] java.lang.reflect.ParameterizedType.class
+[ ] java.lang.reflect.Proxy.class
+[ ] java.lang.reflect.ReflectAccess.class
+[ ] java.lang.reflect.ReflectPermission.class
+[ ] java.lang.reflect.Type.class
+[ ] java.lang.reflect.TypeVariable.class
+[ ] java.lang.reflect.UndeclaredThrowableException.class
+[ ] java.lang.reflect.WildcardType.class
+*** other 
+[ ] java.lang.AbstractMethodError.class
+[ ] java.lang.AbstractStringBuilder.class
+[ ] java.lang.Appendable.class
+[ ] java.lang.ApplicationShutdownHooks.class
+[ ] java.lang.ArithmeticException.class
+[ ] java.lang.ArrayIndexOutOfBoundsException.class
+[ ] java.lang.ArrayStoreException.class
+[ ] java.lang.AssertionError.class
+[ ] java.lang.AssertionStatusDirectives.class
+[ ] java.lang.Boolean.class
+[ ] java.lang.Byte.class
+[ ] java.lang.Character.class
+[ ] java.lang.CharacterData00.class
+[ ] java.lang.CharacterData01.class
+[ ] java.lang.CharacterData02.class
+[ ] java.lang.CharacterData0E.class
+[ ] java.lang.CharacterDataLatin1.class
+[ ] java.lang.CharacterDataPrivateUse.class
+[ ] java.lang.CharacterDataUndefined.class
+[ ] java.lang.CharSequence.class
+[ ] java.lang.Class.class
+[ ] java.lang.ClassCastException.class
+[ ] java.lang.ClassCircularityError.class
+[ ] java.lang.ClassFormatError.class
+[ ] java.lang.ClassLoader.class
+[ ] java.lang.ClassNotFoundException.class
+[ ] java.lang.Cloneable.class
+[ ] java.lang.CloneNotSupportedException.class
+[ ] java.lang.Comparable.class
+[ ] java.lang.Compiler.class
+[ ] java.lang.ConditionalSpecialCasing.class
+[ ] java.lang.Deprecated.class
+[ ] java.lang.Double.class
+[ ] java.lang.Enum.class
+[ ] java.lang.EnumConstantNotPresentException.class
+[ ] java.lang.Error.class
+[ ] java.lang.Exception.class
+[ ] java.lang.ExceptionInInitializerError.class
+[ ] java.lang.Float.class
+[ ] java.lang.IllegalAccessError.class
+[ ] java.lang.IllegalAccessException.class
+[ ] java.lang.IllegalArgumentException.class
+[ ] java.lang.IllegalMonitorStateException.class
+[ ] java.lang.IllegalStateException.class
+[ ] java.lang.IllegalThreadStateException.class
+[ ] java.lang.IncompatibleClassChangeError.class
+[ ] java.lang.IndexOutOfBoundsException.class
+[ ] java.lang.InheritableThreadLocal.class
+[ ] java.lang.InstantiationError.class
+[ ] java.lang.InstantiationException.class
+[ ] java.lang.Integer.class
+[ ] java.lang.InternalError.class
+[ ] java.lang.InterruptedException.class
+[ ] java.lang.Iterable.class
+[ ] java.lang.LinkageError.class
+[ ] java.lang.Long.class
+[ ] java.lang.Math.class
+[ ] java.lang.NegativeArraySizeException.class
+[ ] java.lang.NoClassDefFoundError.class
+[ ] java.lang.NoSuchFieldError.class
+[ ] java.lang.NoSuchFieldException.class
+[ ] java.lang.NoSuchMethodError.class
+[ ] java.lang.NoSuchMethodException.class
+[ ] java.lang.NullPointerException.class
+[ ] java.lang.Number.class
+[ ] java.lang.NumberFormatException.class
+[ ] java.lang.Object.class
+[ ] java.lang.OutOfMemoryError.class
+[ ] java.lang.Override.class
+[ ] java.lang.Package.class
+[ ] java.lang.Process.class
+[ ] java.lang.ProcessBuilder.class
+[ ] java.lang.ProcessEnvironment.class
+[ ] java.lang.ProcessImpl.class
+[ ] java.lang.Readable.class
+[ ] java.lang.Runnable.class
+[ ] java.lang.Runtime.class
+[ ] java.lang.RuntimeException.class
+[ ] java.lang.RuntimePermission.class
+[ ] java.lang.SecurityException.class
+[ ] java.lang.SecurityManager.class
+[ ] java.lang.Short.class
+[ ] java.lang.Shutdown.class
+[ ] java.lang.StackOverflowError.class
+[ ] java.lang.StackTraceElement.class
+[ ] java.lang.StrictMath.class
+[ ] java.lang.String.class
+[ ] java.lang.StringBuffer.class
+[ ] java.lang.StringBuilder.class
+[ ] java.lang.StringCoding.class
+[ ] java.lang.StringIndexOutOfBoundsException.class
+[ ] java.lang.StringValue.class
+[ ] java.lang.SuppressWarnings.class
+[ ] java.lang.System.class
+[ ] java.lang.SystemClassLoaderAction.class
+[ ] java.lang.Terminator.class
+[ ] java.lang.Thread.class
+[ ] java.lang.ThreadDeath.class
+[ ] java.lang.ThreadGroup.class
+[ ] java.lang.ThreadLocal.class
+[ ] java.lang.Throwable.class
+[ ] java.lang.TypeNotPresentException.class
+[ ] java.lang.UnknownError.class
+[ ] java.lang.UnsatisfiedLinkError.class
+[ ] java.lang.UnsupportedClassVersionError.class
+[ ] java.lang.UnsupportedOperationException.class
+[ ] java.lang.VerifyError.class
+[ ] java.lang.VirtualMachineError.class
+[ ] java.lang.Void.class
+
+** java.util
+[x] (-)java.util.concurrent
+[x] (-)java.util.jar
+[x] (-)java.util.logging
+[ ] java.util.prefs
+[x] (-)java.util.regex
+[ ] java.util.spi
+[x] (-)java.util.zip
+[ ] java.util.AbstractCollection.class
+[ ] java.util.AbstractList.class
+[ ] java.util.AbstractMap.class
+[ ] java.util.AbstractQueue.class
+[ ] java.util.AbstractSequentialList.class
+[ ] java.util.AbstractSet.class
+[ ] java.util.ArrayDeque.class
+[ ] java.util.ArrayList.class
+[ ] java.util.Arrays.class
+[ ] java.util.BitSet.class
+[ ] java.util.Calendar.class
+[ ] java.util.Collection.class
+[ ] java.util.Collections.class
+[ ] java.util.Comparator.class
+[ ] java.util.ConcurrentModificationException.class
+[ ] java.util.Currency.class
+[ ] java.util.CurrencyData.class
+[ ] java.util.Date.class
+[ ] java.util.Deque.class
+[ ] java.util.Dictionary.class
+[ ] java.util.DuplicateFormatFlagsException.class
+[ ] java.util.EmptyStackException.class
+[ ] java.util.Enumeration.class
+[ ] java.util.EnumMap.class
+[ ] java.util.EnumSet.class
+[ ] java.util.EventListener.class
+[ ] java.util.EventListenerProxy.class
+[ ] java.util.EventObject.class
+[ ] java.util.FormatFlagsConversionMismatchException.class
+[ ] java.util.Formattable.class
+[ ] java.util.FormattableFlags.class
+[ ] java.util.Formatter.class
+[ ] java.util.FormatterClosedException.class
+[ ] java.util.GregorianCalendar.class
+[ ] java.util.HashMap.class
+[ ] java.util.HashSet.class
+[ ] java.util.Hashtable.class
+[ ] java.util.IdentityHashMap.class
+[ ] java.util.IllegalFormatCodePointException.class
+[ ] java.util.IllegalFormatConversionException.class
+[ ] java.util.IllegalFormatException.class
+[ ] java.util.IllegalFormatFlagsException.class
+[ ] java.util.IllegalFormatPrecisionException.class
+[ ] java.util.IllegalFormatWidthException.class
+[ ] java.util.InputMismatchException.class
+[ ] java.util.InvalidPropertiesFormatException.class
+[ ] java.util.Iterator.class
+[ ] java.util.JapaneseImperialCalendar.class
+[ ] java.util.JumboEnumSet.class
+[ ] java.util.LinkedHashMap.class
+[ ] java.util.LinkedHashSet.class
+[ ] java.util.LinkedList.class
+[ ] java.util.List.class
+[ ] java.util.ListIterator.class
+[ ] java.util.ListResourceBundle.class
+[ ] java.util.Locale.class
+[ ] java.util.LocaleISOData.class
+[ ] java.util.Map.class
+[ ] java.util.MissingFormatArgumentException.class
+[ ] java.util.MissingFormatWidthException.class
+[ ] java.util.MissingResourceException.class
+[ ] java.util.NavigableMap.class
+[ ] java.util.NavigableSet.class
+[ ] java.util.NoSuchElementException.class
+[ ] java.util.Observable.class
+[ ] java.util.Observer.class
+[ ] java.util.PriorityQueue.class
+[ ] java.util.Properties.class
+[ ] java.util.PropertyPermission.class
+[ ] java.util.PropertyPermissionCollection.class
+[ ] java.util.PropertyResourceBundle.class
+[ ] java.util.Queue.class
+[ ] java.util.Random.class
+[ ] java.util.RandomAccess.class
+[ ] java.util.RandomAccessSubList.class
+[ ] java.util.RegularEnumSet.class
+[ ] java.util.ResourceBundle.class
+[ ] java.util.Scanner.class
+[ ] java.util.ServiceConfigurationError.class
+[ ] java.util.ServiceLoader.class
+[ ] java.util.Set.class
+[ ] java.util.SimpleTimeZone.class
+[ ] java.util.SortedMap.class
+[ ] java.util.SortedSet.class
+[ ] java.util.Stack.class
+[ ] java.util.StringTokenizer.class
+[ ] java.util.SubList.class
+[ ] java.util.TaskQueue.class
+[ ] java.util.Timer.class
+[ ] java.util.TimerTask.class
+[ ] java.util.TimerThread.class
+[ ] java.util.TimeZone.class
+[ ] java.util.TooManyListenersException.class
+[ ] java.util.TreeMap.class
+[ ] java.util.TreeSet.class
+[ ] java.util.UnknownFormatConversionException.class
+[ ] java.util.UnknownFormatFlagsException.class
+[ ] java.util.UUID.class
+[ ] java.util.Vector.class
+[ ] java.util.WeakHashMap.class
+[ ] java.util.XMLUtils.class
+
+* 03.Understand Java package
+  java.lang.reflect
+  java.net
+  javax.net.*
+  java.nio.*
+  java.util.concurrent.*
+* 04.MySQL
+** Basic SQL
+   SQL 对大小写不敏感
+**** DDL （数据定义语言）
+     对“表”级别的操作
+     | create database | 创建数据库           |
+     | alter database  | 修改数据库           |
+     | create table    | 创建新表             |
+     | alter table     | 变更（改变）数据库表 |
+     | drop table      | 删除表               |
+     | create index    | 创建索引（搜索键）   |
+     | drop index      | 删除索引             |
+**** DML （数据操作语言）
+     对表中的“数据”操作
+     | update      | 更新数据库表中的数据 |
+     | delete      | 从数据库中删除数据   |
+     | insert into | 向数据库表插入数据   |
+**** DQL （数据查询语言）
+     对表中的“数据”进行检索
+     | select      | 从数据库表中获取数据 |
+**** TCL （事务控制语言）
+     对“事务”进行操作
+     | commit   |   |
+     | rollback |   |
+** MySQL 字段类型
+
+* 05.Java develop framewormk
+** Spring MVC
+** Spring Boot
+* 06.Linux
+** 权限
+*** 读、写、执行
+   | r    | w     | x        |
+   | read | write | executor |
+   | 4    | 2     | 1        |
+*** 权限
+   >>ls -l
+   | -         | rwx    | rw-     | r--     |
+   | file type | u(ser) | g(roup) | o(ther) |
+   | - file    |        |         |         |
+   | d dir     |        |         |         |
+   | l link    |        |         |         |
+*** chmod
+    chmod [options] mode file/dir
+*** chgrp
+* 07.English
+* 08.Apache commons
+** BeanUtils
+** Collections
+** Configuration
+** DBCP
+** DbUtils
+** Digester
+** Exec
+** FileUpload
+** HttpClient
+** IO
+** Lang
+** Logging
+** Math
+** Net
+
+* 09.Use Java package
+[ ] java.lang.annotaion
+[ ] javax.annotation.*
+[ ] java.lang.ref
+[ ] java.math
+[ ] java.rmi.*
+[ ] javax.rmi.*
+[ ] java.security.*
+[ ] javax.security.*
+[ ] java.sql
+[ ] javax.sql.* 
+[ ] javax.transaction.*
+[ ] java.text
+[ ] javax.xml.*
+[ ] org.w3c.dom.*
+[ ] org.xml.sax.*
+[ ] javax.crypto.*
+[ ] javax.imageio.*
+[ ] javax.jws.*
+[ ] java.util.jar
+[ ] java.util.logging
+[ ] java.util.prefs
+[ ] java.util.regex
+[ ] java.util.zip
+* 10.Java develop tools
+[ ] jmap
+[ ] jconsole
+[ ] jstack
+[ ] jvisualvm
+* 11.Study JVM
+* 12.JavaScript
+* 13.JSP
