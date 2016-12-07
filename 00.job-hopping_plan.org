@@ -1,3 +1,4 @@
+#+TITLE: JOB-HOPPING PLAN
 
 * 01.Java core
 ** Java运行原理
@@ -194,6 +195,7 @@
 *** Collection
 ** 多线程
 *** 继承Thread类
+    #+begin_src java
     class ThreadDemo extends Thread {
         @Override
         public void run() {
@@ -205,7 +207,9 @@
             thread.start();
         }
     }
+    #+end_src
 *** 实现Runnable接口
+    #+begin_src java
     class ThreadDemo implements Runnable {
         @Override
         public void run() {
@@ -218,6 +222,7 @@
             thread.start();
         }
     }
+    #+end_src
 ** Java API
 * 02.Read jdk1.6.0_45 src
 ** java.io
